@@ -1,89 +1,32 @@
-Swift Weather
-============
-[![BuddyBuild](https://dashboard.buddybuild.com/api/statusImage?appID=562a9aac2492560100211378&branch=master&build=latest)](https://dashboard.buddybuild.com/apps/562a9aac2492560100211378/build/latest)
+This is a fork of [JakeLin/SwiftWeather](https://github.com/JakeLin/SwiftWeather). Here are the steps I took to get Rollbar integrated into the project *without* cocoapods:
 
-SwiftWeather is an iOS weather app developed in Swift 2. The app has been actively upgrading to adopt the latest features of iOS and Swift language.
+ 1. Download the [Rollbar Framework Files](https://github.com/rollbar/rollbar-ios/releases/download/v0.1.5/Rollbar.zip)
+ 2. Open XCode and Drag the (unzipped) framework files into your solution.
+ 3. If you don't have a bridging file already correctly working:
+    * Add an objective-c (.m) file.
+    * XCode will prompt you to create a bridging file, allow it to do so.
+    * Open the bridinging file, and add the following lines:
+      ```objective-c
+       #ifndef ContextJar_Bridging_Header_h
 
-## Notices
-The current version is working with Xcode Version 7. If you are using different Xcode version, please check out the previous versions.
+       #define ContextJar_Bridging_Header_h
 
-## Version 3
-This version has been upgraded to support iOS 9 only using Swift 2.
+       #import <SystemConfiguration/SystemConfiguration.h>
+       #import <Rollbar/Rollbar.h>
 
-There are two major version for the app released before.
+       #endif /* ContextJar_Bridging_Header_h */
+       ```
+ 4. Initialize Rollbar in AppDelegate like so:
+    ```swift
+    func application(application: UIApplication, didFinishLaunchingWithOptions launchOptions: [NSObject: AnyObject]?) -> Bool     {
+        // Override point for customization after application launch.
+        let config: RollbarConfiguration = RollbarConfiguration()
+        config.environment = "production"
 
-* V1.0 - Support iOS 7+ using CocoaPods and AFNetworking. [README.v1.md](https://github.com/JakeLin/SwiftWeather/blob/master/README.v1.md) and [Release V1 - Using Cocoapods and AFNetworking](https://github.com/JakeLin/SwiftWeather/releases/tag/V1)
-* V2.0 - Support iOS 8+ using Carthage, Alamofire and SwiftyJSON. [README.v2.md](https://github.com/JakeLin/SwiftWeather/blob/master/README.v2.md) and [Release V2.0](https://github.com/JakeLin/SwiftWeather/releases/tag/v2.0)
-* V2.1 -  Support iOS 8+ using Alamofire and SwiftyJSON. This version has removed Carthage because some developers don't have a paid Apple iOS developer account and they have issues to build Carthage packages.
+        Rollbar.initWithAccessToken("YOUR ACCESS TOKEN", configuration: config)
 
-
-## Screenshots
-
-
-## Features
-* Swift Programming Language - fully upgraded to version 2
-* Design driven development - [Sketch design file ](https://raw.githubusercontent.com/JakeLin/SwiftWeather/master/Design/SwiftWeather.sketch)
-
-![Sketch design](https://raw.githubusercontent.com/JakeLin/SwiftWeather/master/screenshots/SketchDesign.png)
- 
-* Custom UIView
-
-![Custom UIView](https://raw.githubusercontent.com/JakeLin/SwiftWeather/master/screenshots/Custom-UIView.png)
-
-* `@IBDesignable` and `@IBInspectable` - Reusable UI components
-
-![IBDesignable and IBInspectable](https://raw.githubusercontent.com/JakeLin/SwiftWeather/master/screenshots/IBDesignable-IBInspectable.png)
-
-* `UIStackView` 
-
-![UIStackView](https://raw.githubusercontent.com/JakeLin/SwiftWeather/master/screenshots/UIStackView.png)
- 
-* Size Classes - Support different devices with adpative layout
-
-![Size Classes](https://raw.githubusercontent.com/JakeLin/SwiftWeather/master/screenshots/UIStackView-with-Size-Classes.png)
-
-* MVVM - Reactively update `ViewController` UI from `ViewModel`
-
-* Protocal oriented programming - Still learning though and finding the best practise of that.
-
-* Value based programming - Use imutable value anywhere.
-
-* Icon fonts － Use [Weather Icons](https://erikflowers.github.io/weather-icons/)
- 
-* [SwiftyJSON](https://github.com/SwiftyJSON/SwiftyJSON)
-
-* Core Location
-
-## TODO
-* App indexing like CoreSpotlight ans `NSUserActivity`
-* Unit Tests
-* UI Tests
-* Animations  
-
-## How to build
-
-1) Clone the repository
-
-```
-$ git clone https://github.com/JakeLin/SwiftWeather.git
-$ cd SwiftWeather
-```
-
-2) Install pods
-
-```
-$ pod install
-```
-
-3) Open the workspace in Xcode
-
-```
-$ open "SwiftWeather.xcworkspace"
-```
-
-4) Compile and run the app in your simulator
-
-# Requirements
-
-* Xcode 7
-* iOS 9
+        return true
+    }
+    ```
+ 5. Now Any Uncaught Objective C style errors will be automatically reported to rollbar
+ 6. You can use `Rollbar.logWithLevel` to report Swift Style errors manually
