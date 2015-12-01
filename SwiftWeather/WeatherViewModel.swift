@@ -78,7 +78,7 @@ class WeatherViewModel {
       case .JSONParsingFailed:
         self.errorMessage.value = "We're having trouble parsing weather data."
       }
-      
+      Rollbar.logWithLevel("warning", message: self.errorMessage.value)
       self.location.value = self.EmptyString
       self.iconText.value = self.EmptyString
       self.temperature.value = self.EmptyString
