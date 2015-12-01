@@ -16,6 +16,11 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
   
   func application(application: UIApplication, didFinishLaunchingWithOptions launchOptions: [NSObject: AnyObject]?) -> Bool {
     // Override point for customization after application launch.
+    let config: RollbarConfiguration = RollbarConfiguration()
+    config.environment = "production"
+
+    Rollbar.initWithAccessToken("YOUR ACCESS TOKEN", configuration: config)
+
     return true
   }
   
