@@ -16,6 +16,8 @@ This is a fork of [JakeLin/SwiftWeather](https://github.com/JakeLin/SwiftWeather
 
        #endif /* ContextJar_Bridging_Header_h */
        ```
+     * delete the added `.m` file.
+
  4. Initialize Rollbar in AppDelegate like so:
     ```swift
     func application(application: UIApplication, didFinishLaunchingWithOptions launchOptions: [NSObject: AnyObject]?) -> Bool     {
